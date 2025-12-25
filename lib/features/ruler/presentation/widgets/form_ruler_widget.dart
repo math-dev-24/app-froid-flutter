@@ -1,20 +1,24 @@
-import 'package:app_froid/data/list_fluids.dart';
-import 'package:app_froid/data/models/fluid.dart';
 import 'package:flutter/material.dart';
 
-class FormRuler extends StatefulWidget {
+import '../../data/datasources/fluids_local_data.dart';
+import '../../domain/entities/fluid.dart';
+
+/// Widget de formulaire pour la règlette simple
+///
+/// Permet de sélectionner un fluide et une température
+class FormRulerWidget extends StatefulWidget {
   final void Function(Fluid fluid, double value)? onSubmit;
 
-  const FormRuler({super.key, this.onSubmit});
+  const FormRulerWidget({super.key, this.onSubmit});
 
   @override
-  State<FormRuler> createState() => _FormRuler();
+  State<FormRulerWidget> createState() => _FormRulerWidgetState();
 }
 
-class _FormRuler extends State<FormRuler> {
+class _FormRulerWidgetState extends State<FormRulerWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Fluid _selectedFluid = ListFluids.fluids.first;
+  Fluid _selectedFluid = FluidsLocalData.fluids.first;
   double _value = 10.0;
 
   double _getMinValue() {
@@ -64,14 +68,15 @@ class _FormRuler extends State<FormRuler> {
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.w500,
                 ),
-                items: ListFluids.fluids.map<DropdownMenuItem<Fluid>>((Fluid value) {
+                items: FluidsLocalData.fluids
+                    .map<DropdownMenuItem<Fluid>>((Fluid value) {
                   return DropdownMenuItem<Fluid>(
                     value: value,
                     child: Text(value.name),
                   );
                 }).toList(),
                 onChanged: (Fluid? value) {
-                  if (value != null && ListFluids.existFluid(value)) {
+                  if (value != null && FluidsLocalData.existFluid(value)) {
                     setState(() {
                       _selectedFluid = value;
                     });
@@ -96,7 +101,8 @@ class _FormRuler extends State<FormRuler> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: colorScheme.primaryContainer,
                   borderRadius: BorderRadius.circular(8),

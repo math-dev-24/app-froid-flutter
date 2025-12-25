@@ -47,6 +47,16 @@ dependencies:
   # Variables d'environnement
   flutter_dotenv: ^5.2.1
 
+  # Architecture hexagonale
+  dartz: ^0.10.1  # Programmation fonctionnelle (Either, Option, etc.)
+  equatable: ^2.0.7  # Comparaison d'objets simplifiée
+
+  # State management
+  flutter_bloc: ^8.1.6  # BLoC pattern pour la gestion d'état
+
+  # Utilitaires
+  connectivity_plus: ^6.1.2  # Vérification de la connexion réseau
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

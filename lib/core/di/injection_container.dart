@@ -1,0 +1,175 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:get_it/get_it.dart';
+import 'package:http/http.dart' as http;
+
+import '../../features/ruler/data/datasources/ruler_remote_datasource.dart';
+import '../../features/ruler/data/datasources/ruler_remote_datasource_impl.dart';
+import '../../features/ruler/data/repositories/ruler_repository_impl.dart';
+import '../../features/ruler/domain/repositories/ruler_repository.dart';
+import '../../features/ruler/domain/usecases/calculate_advanced_ruler.dart';
+import '../../features/ruler/domain/usecases/calculate_simple_ruler.dart';
+import '../../features/ruler/presentation/bloc/ruler_bloc.dart';
+import '../../features/converter/data/datasources/converter_local_datasource.dart';
+import '../../features/converter/data/datasources/converter_local_datasource_impl.dart';
+import '../../features/converter/data/repositories/converter_repository_impl.dart';
+import '../../features/converter/domain/repositories/converter_repository.dart';
+import '../../features/converter/domain/usecases/convert_pressure.dart';
+import '../../features/converter/domain/usecases/convert_temperature.dart';
+import '../../features/converter/presentation/bloc/converter_bloc.dart';
+import '../../features/sensor_signal/data/datasources/sensor_signal_local_datasource.dart';
+import '../../features/sensor_signal/data/datasources/sensor_signal_local_datasource_impl.dart';
+import '../../features/sensor_signal/data/repositories/sensor_signal_repository_impl.dart';
+import '../../features/sensor_signal/domain/repositories/sensor_signal_repository.dart';
+import '../../features/sensor_signal/domain/usecases/convert_sensor_signal.dart';
+import '../../features/sensor_signal/presentation/bloc/sensor_signal_bloc.dart';
+import '../../features/interpolation/data/datasources/interpolation_local_datasource.dart';
+import '../../features/interpolation/data/datasources/interpolation_local_datasource_impl.dart';
+import '../../features/interpolation/data/repositories/interpolation_repository_impl.dart';
+import '../../features/interpolation/domain/repositories/interpolation_repository.dart';
+import '../../features/interpolation/domain/usecases/calculate_interpolation.dart';
+import '../../features/interpolation/presentation/bloc/interpolation_bloc.dart';
+import '../network/network_info.dart';
+import '../network/network_info_impl.dart';
+
+/// Instance globale de GetIt pour l'injection de dépendances
+final getIt = GetIt.instance;
+
+/// Configure toutes les dépendances de l'application
+///
+/// Cette fonction doit être appelée une seule fois au démarrage de l'app
+/// Organisation:
+/// - External (packages tiers)
+/// - Core (services partagés)
+/// - Features (par fonctionnalité)
+Future<void> initializeDependencies() async {
+  // ========================================
+  // External Dependencies (packages tiers)
+  // ========================================
+
+  // HTTP Client
+  getIt.registerLazySingleton<http.Client>(() => http.Client());
+
+  // Connectivity
+  getIt.registerLazySingleton<Connectivity>(() => Connectivity());
+
+  // ========================================
+  // Core Dependencies
+  // ========================================
+
+  // Network Info
+  getIt.registerLazySingleton<NetworkInfo>(
+    () => NetworkInfoImpl(getIt()),
+  );
+
+  // ========================================
+  // Feature: Ruler
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<RulerRemoteDataSource>(
+    () => RulerRemoteDataSourceImpl(
+      client: getIt(),
+      baseUrl: 'https://api-ovh.mathieu-busse.dev/v1',
+    ),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<RulerRepository>(
+    () => RulerRepositoryImpl(
+      remoteDataSource: getIt(),
+      networkInfo: getIt(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => CalculateSimpleRuler(getIt()));
+  getIt.registerLazySingleton(() => CalculateAdvancedRuler(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => RulerBloc(
+      calculateSimpleRuler: getIt(),
+      calculateAdvancedRuler: getIt(),
+    ),
+  );
+
+  // ========================================
+  // Feature: Converter
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<ConverterLocalDataSource>(
+    () => ConverterLocalDataSourceImpl(),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<ConverterRepository>(
+    () => ConverterRepositoryImpl(
+      localDataSource: getIt(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => ConvertPressure(getIt()));
+  getIt.registerLazySingleton(() => ConvertTemperature(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => ConverterBloc(
+      convertPressure: getIt(),
+      convertTemperature: getIt(),
+    ),
+  );
+
+  // ========================================
+  // Feature: SensorSignal
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<SensorSignalLocalDataSource>(
+    () => SensorSignalLocalDataSourceImpl(),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<SensorSignalRepository>(
+    () => SensorSignalRepositoryImpl(
+      localDataSource: getIt(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => ConvertSensorSignal(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => SensorSignalBloc(
+      convertSensorSignal: getIt(),
+    ),
+  );
+
+  // ========================================
+  // Feature: Interpolation
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<InterpolationLocalDataSource>(
+    () => InterpolationLocalDataSourceImpl(),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<InterpolationRepository>(
+    () => InterpolationRepositoryImpl(
+      localDataSource: getIt(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => CalculateInterpolation(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => InterpolationBloc(
+      calculateInterpolation: getIt(),
+    ),
+  );
+}
