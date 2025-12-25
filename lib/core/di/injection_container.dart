@@ -40,6 +40,12 @@ import '../../features/nitrogen_test/data/repositories/nitrogen_test_repository_
 import '../../features/nitrogen_test/domain/repositories/nitrogen_test_repository.dart';
 import '../../features/nitrogen_test/domain/usecases/calculate_nitrogen_test.dart';
 import '../../features/nitrogen_test/presentation/bloc/nitrogen_test_bloc.dart';
+import '../../features/desp/data/datasources/desp_local_datasource.dart';
+import '../../features/desp/data/datasources/desp_local_datasource_impl.dart';
+import '../../features/desp/data/repositories/desp_repository_impl.dart';
+import '../../features/desp/domain/repositories/desp_repository.dart';
+import '../../features/desp/domain/usecases/calculate_desp_category.dart';
+import '../../features/desp/presentation/bloc/desp_bloc.dart';
 import '../network/network_info.dart';
 import '../network/network_info_impl.dart';
 
@@ -234,6 +240,32 @@ Future<void> initializeDependencies() async {
   getIt.registerFactory(
     () => NitrogenTestBloc(
       calculateNitrogenTest: getIt(),
+    ),
+  );
+
+  // ========================================
+  // Feature: DESP
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<DespLocalDataSource>(
+    () => DespLocalDataSourceImpl(),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<DespRepository>(
+    () => DespRepositoryImpl(
+      localDataSource: getIt(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => CalculateDespCategory(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => DespBloc(
+      calculateDespCategory: getIt(),
     ),
   );
 }

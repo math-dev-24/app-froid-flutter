@@ -1,6 +1,5 @@
 import 'package:app_froid/screens/advanced_ruler_screen.dart';
 import 'package:app_froid/screens/contact_screen.dart';
-import 'package:app_froid/screens/desp_screen.dart';
 import 'package:app_froid/screens/intermediate_pressure_screen.dart';
 import 'package:app_froid/screens/lfl_volume_screen.dart';
 import 'package:app_froid/screens/refrigerant_charge_screen.dart';
@@ -16,6 +15,7 @@ import 'package:app_froid/features/sensor_signal/presentation/pages/sensor_signa
 import 'package:app_froid/features/interpolation/presentation/pages/interpolation_page.dart';
 import 'package:app_froid/features/equivalent_diameter/presentation/pages/equivalent_diameter_page.dart';
 import 'package:app_froid/features/nitrogen_test/presentation/pages/nitrogen_test_page.dart';
+import 'package:app_froid/features/desp/presentation/pages/desp_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +24,7 @@ void main() async {
   // Initialiser l'ancienne architecture (pour les autres features)
   setupServiceLocator();
 
-  // Initialiser la nouvelle architecture (pour Ruler, Converter, SensorSignal, Interpolation, EquivalentDiameter et NitrogenTest)
+  // Initialiser la nouvelle architecture (pour Ruler, Converter, SensorSignal, Interpolation, EquivalentDiameter, NitrogenTest et DESP)
   await initializeDependencies();
 
   runApp(const MyApp());
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         '/interpolation': (context) => const InterpolationPage(), // Nouvelle architecture
         '/equivalent-diameter': (context) => const EquivalentDiameterPage(), // Nouvelle architecture
         '/nitrogen-test': (context) => const NitrogenTestPage(), // Nouvelle architecture
-        '/desp': (context) => const DespScreen(),
+        '/desp': (context) => const DespPage(), // Nouvelle architecture
         '/intermediate-pressure': (context) => const IntermediatePressureScreen(),
         '/refrigerant-charge': (context) => const RefrigerantChargeScreen(),
         '/lfl-volume': (context) => const LflVolumeScreen(),
