@@ -12,7 +12,6 @@ class ParameterScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          // En-tête de section
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
@@ -35,9 +34,8 @@ class ParameterScreen extends StatelessWidget {
                 builder: (context) => AlertDialog(
                   title: const Text('À propos'),
                   content: const Text(
-                    'App Froid - Application de compteur\n'
-                    'Version 1.0.0\n\n'
-                    'Développé avec Flutter',
+                    'App Froid \n'
+                    'Version 1.0.0',
                   ),
                   actions: [
                     TextButton(
@@ -48,23 +46,7 @@ class ParameterScreen extends StatelessWidget {
                 ),
               );
             },
-          ),
-
-          const Divider(),
-
-          ListTile(
-            leading: const Icon(Icons.refresh),
-            title: const Text('Réinitialiser les compteurs'),
-            subtitle: const Text('Remettre tous les compteurs à zéro'),
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Fonction à venir !'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            },
-          ),
+          )
         ],
       ),
     );

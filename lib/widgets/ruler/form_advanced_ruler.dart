@@ -43,283 +43,357 @@ class _FormAdvancedRuler extends State<FormAdvancedRuler> {
     super.dispose();
   }
 
+  Widget _buildDropdown<T>({
+    required String label,
+    required T value,
+    required List<T> items,
+    required String Function(T) getLabel,
+    required void Function(T?) onChanged,
+    required ColorScheme colorScheme,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: colorScheme.outline.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<T>(
+              value: value,
+              isExpanded: true,
+              icon: Icon(Icons.arrow_drop_down, color: colorScheme.primary),
+              style: TextStyle(
+                fontSize: 15,
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w500,
+              ),
+              items: items.map((T item) {
+                return DropdownMenuItem<T>(
+                  value: item,
+                  child: Text(getLabel(item)),
+                );
+              }).toList(),
+              onChanged: onChanged,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Form(
       key: _formKey,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            // Section Fluide
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Fluide',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<Fluid>(
-                          value: _selectedFluid,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          isExpanded: true,
-                          items: ListFluids.fluids.map<DropdownMenuItem<Fluid>>((Fluid value) {
-                            return DropdownMenuItem<Fluid>(
-                              value: value,
-                              child: Text(value.name),
-                            );
-                          }).toList(),
-                          onChanged: (Fluid? value) {
-                            if (value != null && ListFluids.existFluid(value)) {
-                              setState(() {
-                                _selectedFluid = value;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerLowest,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: colorScheme.outlineVariant,
+                  width: 1,
                 ),
               ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Section Recherche
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Recherché',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<OptionRuler>(
-                          value: _need,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          isExpanded: true,
-                          items: ListOptionsRuler.options
-                              .where((o) => o.canSearch)
-                              .map((OptionRuler value) {
-                            return DropdownMenuItem<OptionRuler>(
-                              value: value,
-                              child: Text(value.label),
-                            );
-                          }).toList(),
-                          onChanged: (OptionRuler? value) {
-                            if (value != null && ListOptionsRuler.existOption(value)) {
-                              setState(() {
-                                _need = value;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Section Filtre 1
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Filtre 1',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<OptionRuler>(
-                          value: _car1,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          isExpanded: true,
-                          items: ListOptionsRuler.options.map((OptionRuler value) {
-                            return DropdownMenuItem<OptionRuler>(
-                              value: value,
-                              child: Text(value.label),
-                            );
-                          }).toList(),
-                          onChanged: (OptionRuler? value) {
-                            if (value != null &&
-                                ListOptionsRuler.existOption(value) &&
-                                value != _need &&
-                                value != _car2) {
-                              setState(() {
-                                _car1 = value;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: _val1Controller,
-                      decoration: InputDecoration(
-                        labelText: 'Valeur 1',
-                        hintText: 'Entrez la valeur',
-                        border: OutlineInputBorder(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primaryContainer,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        prefixIcon: const Icon(Icons.edit),
-                      ),
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      onChanged: (value) {
-                        setState(() {
-                          _val1 = double.tryParse(value) ?? 0.0;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Veuillez entrer une valeur';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Veuillez entrer un nombre valide';
-                        }
-                        return null;
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Section Filtre 2
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Filtre 2',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<OptionRuler>(
-                          value: _car2,
-                          icon: const Icon(Icons.arrow_drop_down),
-                          isExpanded: true,
-                          items: ListOptionsRuler.options.map((OptionRuler value) {
-                            return DropdownMenuItem<OptionRuler>(
-                              value: value,
-                              child: Text(value.label),
-                            );
-                          }).toList(),
-                          onChanged: (OptionRuler? value) {
-                            if (value != null &&
-                                ListOptionsRuler.existOption(value) &&
-                                value != _need &&
-                                value != _car1) {
-                              setState(() {
-                                _car2 = value;
-                              });
-                            }
-                          },
+                        child: Icon(
+                          Icons.science_rounded,
+                          color: colorScheme.primary,
+                          size: 20,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: _val2Controller,
-                      decoration: InputDecoration(
-                        labelText: 'Valeur 2',
-                        hintText: 'Entrez la valeur',
-                        border: OutlineInputBorder(
+                      const SizedBox(width: 12),
+                      Text(
+                        'Configuration',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  _buildDropdown<Fluid>(
+                    label: 'Fluide frigorigène',
+                    value: _selectedFluid,
+                    items: ListFluids.fluids,
+                    getLabel: (fluid) => fluid.name,
+                    onChanged: (Fluid? value) {
+                      if (value != null && ListFluids.existFluid(value)) {
+                        setState(() {
+                          _selectedFluid = value;
+                        });
+                      }
+                    },
+                    colorScheme: colorScheme,
+                  ),
+                  const SizedBox(height: 20),
+                  _buildDropdown<OptionRuler>(
+                    label: 'Paramètre recherché',
+                    value: _need,
+                    items: ListOptionsRuler.options.where((o) => o.canSearch).toList(),
+                    getLabel: (option) => option.label,
+                    onChanged: (OptionRuler? value) {
+                      if (value != null && ListOptionsRuler.existOption(value)) {
+                        setState(() {
+                          _need = value;
+                        });
+                      }
+                    },
+                    colorScheme: colorScheme,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerLowest,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: colorScheme.outlineVariant,
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: colorScheme.secondaryContainer,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        prefixIcon: const Icon(Icons.edit),
+                        child: Icon(
+                          Icons.filter_1,
+                          color: colorScheme.secondary,
+                          size: 20,
+                        ),
                       ),
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      onChanged: (value) {
+                      const SizedBox(width: 12),
+                      Text(
+                        'Filtre 1',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  _buildDropdown<OptionRuler>(
+                    label: 'Paramètre',
+                    value: _car1,
+                    items: ListOptionsRuler.options,
+                    getLabel: (option) => option.label,
+                    onChanged: (OptionRuler? value) {
+                      if (value != null &&
+                          ListOptionsRuler.existOption(value) &&
+                          value != _need &&
+                          value != _car2) {
                         setState(() {
-                          _val2 = double.tryParse(value) ?? 0.0;
+                          _car1 = value;
                         });
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Veuillez entrer une valeur';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Veuillez entrer un nombre valide';
-                        }
-                        return null;
-                      },
+                      }
+                    },
+                    colorScheme: colorScheme,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _val1Controller,
+                    decoration: InputDecoration(
+                      labelText: 'Valeur',
+                      hintText: 'Entrez la valeur',
+                      filled: true,
+                      fillColor: colorScheme.surfaceContainerHighest,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: colorScheme.outline.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: colorScheme.outline.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: colorScheme.primary,
+                          width: 2,
+                        ),
+                      ),
+                      prefixIcon: Icon(Icons.edit, color: colorScheme.primary),
                     ),
-                  ],
-                ),
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    onChanged: (value) {
+                      setState(() {
+                        _val1 = double.tryParse(value) ?? 0.0;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Veuillez entrer une valeur';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Nombre invalide';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
               ),
             ),
-
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerLowest,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: colorScheme.outlineVariant,
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: colorScheme.tertiaryContainer,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.filter_2,
+                          color: colorScheme.tertiary,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Filtre 2',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  _buildDropdown<OptionRuler>(
+                    label: 'Paramètre',
+                    value: _car2,
+                    items: ListOptionsRuler.options,
+                    getLabel: (option) => option.label,
+                    onChanged: (OptionRuler? value) {
+                      if (value != null &&
+                          ListOptionsRuler.existOption(value) &&
+                          value != _need &&
+                          value != _car1) {
+                        setState(() {
+                          _car2 = value;
+                        });
+                      }
+                    },
+                    colorScheme: colorScheme,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _val2Controller,
+                    decoration: InputDecoration(
+                      labelText: 'Valeur',
+                      hintText: 'Entrez la valeur',
+                      filled: true,
+                      fillColor: colorScheme.surfaceContainerHighest,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: colorScheme.outline.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: colorScheme.outline.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: colorScheme.primary,
+                          width: 2,
+                        ),
+                      ),
+                      prefixIcon: Icon(Icons.edit, color: colorScheme.primary),
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    onChanged: (value) {
+                      setState(() {
+                        _val2 = double.tryParse(value) ?? 0.0;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Veuillez entrer une valeur';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Nombre invalide';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 24),
-
-            // Bouton Calculer
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: FilledButton.icon(
                 onPressed: () {
                   if (_formKey.currentState?.validate() ?? false) {
                     widget.onCalculate?.call(
@@ -332,13 +406,14 @@ class _FormAdvancedRuler extends State<FormAdvancedRuler> {
                     );
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 18),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
+                icon: const Icon(Icons.calculate_rounded),
+                label: const Text(
                   'Calculer',
                   style: TextStyle(
                     fontSize: 16,
@@ -347,8 +422,7 @@ class _FormAdvancedRuler extends State<FormAdvancedRuler> {
                 ),
               ),
             ),
-
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
           ],
         ),
       ),

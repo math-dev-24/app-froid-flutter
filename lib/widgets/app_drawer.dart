@@ -35,14 +35,6 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.build),
-            title: Text('Outils'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/tools');
-            },
-          ),
-          ListTile(
             leading: Icon(Icons.settings),
             title: Text('Paramètres'),
             onTap: () {

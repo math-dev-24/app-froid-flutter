@@ -1,7 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'api/api_service.dart';
 import 'rulers/ruler_service.dart';
-import 'counter_service.dart';
 
 /// Instance globale du service locator
 final getIt = GetIt.instance;
@@ -20,9 +19,6 @@ void setupServiceLocator() {
   getIt.registerLazySingleton<RulerService>(
     () => RulerService(apiService: getIt<ApiService>()),
   );
-
-  // Service Counter - Gestion du compteur persistant
-  getIt.registerLazySingleton<CounterService>(() => CounterService());
 }
 
 /// Nettoie les services avant de fermer l'application

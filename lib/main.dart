@@ -1,10 +1,12 @@
-import 'package:app_froid/screens/tools/advanced_ruler_screen.dart';
+import 'package:app_froid/screens/advanced_ruler_screen.dart';
+import 'package:app_froid/screens/converter_screen.dart';
+import 'package:app_froid/screens/equivalent_diameter_screen.dart';
+import 'package:app_froid/screens/interpolation_screen.dart';
+import 'package:app_froid/screens/sensor_convert_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app_froid/screens/home_screen.dart';
-import 'package:app_froid/screens/tools/tool_screen.dart';
-import 'package:app_froid/screens/tools/ruler_screen.dart';
+import 'package:app_froid/screens/ruler_screen.dart';
 import 'package:app_froid/services/service_locator.dart';
-import 'package:app_froid/services/counter_service.dart';
 
 void main() async {
   // Nécessaire pour initialiser les services avant runApp
@@ -12,9 +14,6 @@ void main() async {
 
   // Configure l'injection de dépendances
   setupServiceLocator();
-
-  // Initialise le service du compteur
-  await getIt.get<CounterService>().init();
 
   runApp(const MyApp());
 }
@@ -32,9 +31,12 @@ class MyApp extends StatelessWidget {
       home: const HomeScreen(title: 'App Froid'),
       debugShowCheckedModeBanner: false,
       routes: {
-        '/tools': (context) => const ToolScreen(),
         '/ruler': (context) => const RulerScreen(),
-        '/ruler-advanced': (context) => const AdvancedRulerScreen()
+        '/ruler-advanced': (context) => const AdvancedRulerScreen(),
+        '/sensor-convert': (context) => const SensorConvertScreen(),
+        '/converter': (context) => const ConverterScreen(),
+        '/equivalent-diameter': (context) => const EquivalentDiameterScreen(),
+        '/interpolation': (context) => const InterpolationScreen(),
       },
     );
   }
