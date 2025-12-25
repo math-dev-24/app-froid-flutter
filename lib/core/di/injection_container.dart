@@ -28,6 +28,18 @@ import '../../features/interpolation/data/repositories/interpolation_repository_
 import '../../features/interpolation/domain/repositories/interpolation_repository.dart';
 import '../../features/interpolation/domain/usecases/calculate_interpolation.dart';
 import '../../features/interpolation/presentation/bloc/interpolation_bloc.dart';
+import '../../features/equivalent_diameter/data/datasources/equivalent_diameter_local_datasource.dart';
+import '../../features/equivalent_diameter/data/datasources/equivalent_diameter_local_datasource_impl.dart';
+import '../../features/equivalent_diameter/data/repositories/equivalent_diameter_repository_impl.dart';
+import '../../features/equivalent_diameter/domain/repositories/equivalent_diameter_repository.dart';
+import '../../features/equivalent_diameter/domain/usecases/calculate_equivalent_diameter.dart';
+import '../../features/equivalent_diameter/presentation/bloc/equivalent_diameter_bloc.dart';
+import '../../features/nitrogen_test/data/datasources/nitrogen_test_local_datasource.dart';
+import '../../features/nitrogen_test/data/datasources/nitrogen_test_local_datasource_impl.dart';
+import '../../features/nitrogen_test/data/repositories/nitrogen_test_repository_impl.dart';
+import '../../features/nitrogen_test/domain/repositories/nitrogen_test_repository.dart';
+import '../../features/nitrogen_test/domain/usecases/calculate_nitrogen_test.dart';
+import '../../features/nitrogen_test/presentation/bloc/nitrogen_test_bloc.dart';
 import '../network/network_info.dart';
 import '../network/network_info_impl.dart';
 
@@ -170,6 +182,58 @@ Future<void> initializeDependencies() async {
   getIt.registerFactory(
     () => InterpolationBloc(
       calculateInterpolation: getIt(),
+    ),
+  );
+
+  // ========================================
+  // Feature: EquivalentDiameter
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<EquivalentDiameterLocalDataSource>(
+    () => EquivalentDiameterLocalDataSourceImpl(),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<EquivalentDiameterRepository>(
+    () => EquivalentDiameterRepositoryImpl(
+      localDataSource: getIt(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => CalculateEquivalentDiameter(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => EquivalentDiameterBloc(
+      calculateEquivalentDiameter: getIt(),
+    ),
+  );
+
+  // ========================================
+  // Feature: NitrogenTest
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<NitrogenTestLocalDataSource>(
+    () => NitrogenTestLocalDataSourceImpl(),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<NitrogenTestRepository>(
+    () => NitrogenTestRepositoryImpl(
+      localDataSource: getIt(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => CalculateNitrogenTest(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => NitrogenTestBloc(
+      calculateNitrogenTest: getIt(),
     ),
   );
 }
