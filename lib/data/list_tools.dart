@@ -40,5 +40,35 @@ class ListTools {
       icon: Icons.show_chart,
       route: '/interpolation',
     ),
+    Tool(
+      name: 'DESP',
+      description: 'Directive Équipements Sous Pression 2014/68/UE',
+      icon: Icons.gavel,
+      route: '/desp',
+    ),
+    Tool(
+      name: 'Test d\'Azote',
+      description: 'Calcul de l\'influence de la température',
+      icon: Icons.science,
+      route: '/nitrogen-test',
+    ),
+    Tool(
+      name: 'Pression Moyenne',
+      description: 'Calcul pour systèmes bi-étagés',
+      icon: Icons.compress,
+      route: '/intermediate-pressure',
+    ),
+    Tool(
+      name: 'Calcul de Charge',
+      description: 'Dimensionnement charge frigorifique',
+      icon: Icons.calculate_outlined,
+      route: '/refrigerant-charge',
+    ),
+    Tool(
+      name: 'Volume Mini LFL',
+      description: 'Limite Inférieure d\'Inflammabilité',
+      icon: Icons.local_fire_department,
+      route: '/lfl-volume',
+    ),
   ];
 }

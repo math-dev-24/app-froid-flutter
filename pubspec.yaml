@@ -44,6 +44,9 @@ dependencies:
   # Service locator pour l'injection de dépendances
   get_it: ^8.0.2
 
+  # Variables d'environnement
+  flutter_dotenv: ^5.2.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,6 +68,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  # Assets pour les fichiers .env
+  assets:
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:
