@@ -46,6 +46,26 @@ import '../../features/desp/data/repositories/desp_repository_impl.dart';
 import '../../features/desp/domain/repositories/desp_repository.dart';
 import '../../features/desp/domain/usecases/calculate_desp_category.dart';
 import '../../features/desp/presentation/bloc/desp_bloc.dart';
+import '../../features/intermediate_pressure/data/datasources/intermediate_pressure_local_datasource.dart';
+import '../../features/intermediate_pressure/data/datasources/intermediate_pressure_local_datasource_impl.dart';
+import '../../features/intermediate_pressure/data/repositories/intermediate_pressure_repository_impl.dart';
+import '../../features/intermediate_pressure/domain/repositories/intermediate_pressure_repository.dart';
+import '../../features/intermediate_pressure/domain/usecases/calculate_intermediate_pressure.dart';
+import '../../features/intermediate_pressure/presentation/bloc/intermediate_pressure_bloc.dart';
+import '../../features/refrigerant_charge/data/datasources/refrigerant_charge_local_datasource.dart';
+import '../../features/refrigerant_charge/data/datasources/refrigerant_charge_local_datasource_impl.dart';
+import '../../features/refrigerant_charge/data/repositories/refrigerant_charge_repository_impl.dart';
+import '../../features/refrigerant_charge/domain/repositories/refrigerant_charge_repository.dart';
+import '../../features/refrigerant_charge/domain/usecases/calculate_refrigerant_charge.dart';
+import '../../features/refrigerant_charge/domain/usecases/get_available_fluids.dart';
+import '../../features/refrigerant_charge/presentation/bloc/refrigerant_charge_bloc.dart';
+import '../../features/lfl_volume/data/datasources/lfl_volume_local_datasource.dart';
+import '../../features/lfl_volume/data/datasources/lfl_volume_local_datasource_impl.dart';
+import '../../features/lfl_volume/data/repositories/lfl_volume_repository_impl.dart';
+import '../../features/lfl_volume/domain/repositories/lfl_volume_repository.dart';
+import '../../features/lfl_volume/domain/usecases/calculate_lfl_volume.dart';
+import '../../features/lfl_volume/domain/usecases/get_flammable_fluids.dart';
+import '../../features/lfl_volume/presentation/bloc/lfl_volume_bloc.dart';
 import '../network/network_info.dart';
 import '../network/network_info_impl.dart';
 
@@ -266,6 +286,88 @@ Future<void> initializeDependencies() async {
   getIt.registerFactory(
     () => DespBloc(
       calculateDespCategory: getIt(),
+    ),
+  );
+
+  // ========================================
+  // Feature: IntermediatePressure
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<IntermediatePressureLocalDataSource>(
+    () => IntermediatePressureLocalDataSourceImpl(),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<IntermediatePressureRepository>(
+    () => IntermediatePressureRepositoryImpl(
+      localDataSource: getIt(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => CalculateIntermediatePressure(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => IntermediatePressureBloc(
+      calculateIntermediatePressure: getIt(),
+    ),
+  );
+
+  // ========================================
+  // Feature: RefrigerantCharge
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<RefrigerantChargeLocalDataSource>(
+    () => RefrigerantChargeLocalDataSourceImpl(),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<RefrigerantChargeRepository>(
+    () => RefrigerantChargeRepositoryImpl(
+      localDataSource: getIt(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => GetAvailableFluids(getIt()));
+  getIt.registerLazySingleton(() => CalculateRefrigerantCharge(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => RefrigerantChargeBloc(
+      getAvailableFluids: getIt(),
+      calculateRefrigerantCharge: getIt(),
+    ),
+  );
+
+  // ========================================
+  // Feature: LflVolume
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<LflVolumeLocalDataSource>(
+    () => LflVolumeLocalDataSourceImpl(),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<LflVolumeRepository>(
+    () => LflVolumeRepositoryImpl(
+      localDataSource: getIt(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerLazySingleton(() => GetFlammableFluids(getIt()));
+  getIt.registerLazySingleton(() => CalculateLflVolume(getIt()));
+
+  // Bloc
+  getIt.registerFactory(
+    () => LflVolumeBloc(
+      getFlammableFluids: getIt(),
+      calculateLflVolume: getIt(),
     ),
   );
 }

@@ -37,3 +37,13 @@ class CacheException implements Exception {
   @override
   String toString() => message ?? 'CacheException';
 }
+
+/// Exception levée lors d'une erreur de calcul
+class CalculationException implements Exception {
+  final String message;
+
+  const CalculationException(this.message);
+
+  @override
+  String toString() => message;
+}

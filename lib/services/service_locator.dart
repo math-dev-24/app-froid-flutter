@@ -1,6 +1,5 @@
 import 'package:get_it/get_it.dart';
 import 'api/api_service.dart';
-import 'rulers/ruler_service.dart';
 
 /// Instance globale du service locator
 final getIt = GetIt.instance;
@@ -14,15 +13,4 @@ void setupServiceLocator() {
 
   // Service API - Client HTTP pour communiquer avec le backend
   getIt.registerLazySingleton<ApiService>(() => ApiService());
-
-  // Service Ruler - Logique métier pour les calculs de règlette (legacy)
-  getIt.registerLazySingleton<RulerService>(
-    () => RulerService(),
-  );
-}
-
-/// Nettoie les services avant de fermer l'application
-void disposeServices() {
-  getIt<RulerService>().dispose();
-  getIt.reset();
 }

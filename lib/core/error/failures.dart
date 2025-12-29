@@ -42,3 +42,8 @@ class CacheFailure extends Failure {
       [String message = 'Aucune donnée en cache'])
       : super(message);
 }
+
+/// Échec lors d'un calcul
+class CalculationFailure extends Failure {
+  const CalculationFailure(String message) : super(message);
+}
