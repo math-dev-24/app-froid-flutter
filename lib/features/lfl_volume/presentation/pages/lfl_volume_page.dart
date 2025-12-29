@@ -132,16 +132,12 @@ class _LflVolumeViewState extends State<LflVolumeView> {
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: _buildConfigPanel(colorScheme, fluids),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: _buildResultsPanel(colorScheme, state),
-                ),
+                _buildConfigPanel(colorScheme, fluids),
+                const SizedBox(height: 20),
+                _buildResultsPanel(colorScheme, state),
               ],
             ),
           );
@@ -179,12 +175,15 @@ class _LflVolumeViewState extends State<LflVolumeView> {
                 ),
               ),
               const SizedBox(width: 12),
-              Text(
-                'Paramètres de calcul',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onSurface,
+              Expanded(
+                child: Text(
+                  'Paramètres de calcul',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -252,12 +251,15 @@ class _LflVolumeViewState extends State<LflVolumeView> {
                 size: 20,
               ),
               const SizedBox(width: 8),
-              Text(
-                'Résultats',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onSurface,
+              Expanded(
+                child: Text(
+                  'Résultats',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -427,12 +429,15 @@ class _LflVolumeViewState extends State<LflVolumeView> {
                 children: [
                   Icon(riskIcon, color: riskColor, size: 20),
                   const SizedBox(width: 8),
-                  Text(
-                    'Risque $riskLevel',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: riskColor,
+                  Expanded(
+                    child: Text(
+                      'Risque $riskLevel',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: riskColor,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -547,14 +552,17 @@ class _LflVolumeViewState extends State<LflVolumeView> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      _selectedFluid!.name,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: _selectedFluid!.classification == 'A3'
-                            ? Colors.red.shade700
-                            : Colors.amber.shade700,
+                    Expanded(
+                      child: Text(
+                        _selectedFluid!.name,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: _selectedFluid!.classification == 'A3'
+                              ? Colors.red.shade700
+                              : Colors.amber.shade700,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(width: 8),

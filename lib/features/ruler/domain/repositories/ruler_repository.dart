@@ -11,14 +11,16 @@ import '../entities/fluid.dart';
 abstract class RulerRepository {
   /// Effectue un calcul simple de règlette
   ///
-  /// Calcul basique: température -> pression avec qualité = 1.0
+  /// Calcul basique: température -> pression ou pression -> température avec qualité = 1.0
   /// [fluid] Le fluide frigorigène à utiliser
-  /// [temperature] La température en °C
+  /// [temperature] La température en °C (optionnel si pressure est fourni)
+  /// [pressure] La pression en bar (optionnel si temperature est fourni)
   ///
   /// Retourne Either un Failure ou le CalculationResult
   Future<Either<Failure, CalculationResult>> calculateSimple({
     required Fluid fluid,
-    required double temperature,
+    double? temperature,
+    double? pressure,
   });
 
   /// Effectue un calcul avancé de règlette

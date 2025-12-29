@@ -39,6 +39,7 @@ class RulerBloc extends Bloc<RulerEvent, RulerState> {
       SimpleRulerParams(
         fluid: event.fluid,
         temperature: event.temperature,
+        pressure: event.pressure,
       ),
     );
 

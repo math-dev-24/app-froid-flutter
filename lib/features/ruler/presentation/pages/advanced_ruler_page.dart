@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_froid/core/di/injection_container.dart' as di;
-import 'package:app_froid/data/models/fluid.dart' as old_fluid;
-import 'package:app_froid/features/ruler/domain/entities/fluid.dart' as new_fluid;
+import 'package:app_froid/features/ruler/domain/entities/fluid.dart';
 import 'package:app_froid/features/ruler/presentation/bloc/ruler_bloc.dart';
 import 'package:app_froid/features/ruler/presentation/bloc/ruler_event.dart';
 import 'package:app_froid/features/ruler/presentation/bloc/ruler_state.dart';
+import 'package:app_froid/features/fluid_custom/presentation/widgets/fluid_custom_button.dart';
 import 'package:app_froid/widgets/ruler/form_advanced_ruler.dart';
 
 class AdvancedRulerPage extends StatelessWidget {
@@ -62,6 +62,10 @@ class _AdvancedRulerViewState extends State<AdvancedRulerView> {
             fontSize: 22,
           ),
         ),
+        actions: const [
+          FluidCustomButton(),
+          SizedBox(width: 8),
+        ],
       ),
       body: BlocBuilder<RulerBloc, RulerState>(
         builder: (context, state) {
@@ -77,7 +81,7 @@ class _AdvancedRulerViewState extends State<AdvancedRulerView> {
               Expanded(
                 child: FormAdvancedRuler(
                   onCalculate: ({
-                    required old_fluid.Fluid fluid,
+                    required Fluid fluid,
                     required String car1,
                     required double val1,
                     required String car2,
@@ -88,15 +92,9 @@ class _AdvancedRulerViewState extends State<AdvancedRulerView> {
                       _currentCarNeed = carNeed;
                     });
 
-                    // Convertir l'ancien Fluid vers le nouveau Fluid
-                    final newFluid = new_fluid.Fluid(
-                      name: fluid.name,
-                      refName: fluid.refName,
-                    );
-
                     context.read<RulerBloc>().add(
                           CalculateAdvancedEvent(
-                            fluid: newFluid,
+                            fluid: fluid,
                             car1: car1,
                             val1: val1,
                             car2: car2,

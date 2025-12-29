@@ -12,18 +12,27 @@ abstract class RulerEvent extends Equatable {
   List<Object> get props => [];
 }
 
-/// Événement pour effectuer un calcul simple (T -> P)
+/// Événement pour effectuer un calcul simple (T -> P ou P -> T)
 class CalculateSimpleEvent extends RulerEvent {
   final Fluid fluid;
-  final double temperature;
+  final double? temperature;
+  final double? pressure;
 
   const CalculateSimpleEvent({
     required this.fluid,
-    required this.temperature,
-  });
+    this.temperature,
+    this.pressure,
+  }) : assert(
+          temperature != null || pressure != null,
+          'Either temperature or pressure must be provided',
+        );
 
   @override
-  List<Object> get props => [fluid, temperature];
+  List<Object> get props => [
+        fluid,
+        if (temperature != null) temperature!,
+        if (pressure != null) pressure!,
+      ];
 }
 
 /// Événement pour effectuer un calcul avancé (paramètres personnalisés)

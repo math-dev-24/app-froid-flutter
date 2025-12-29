@@ -1,7 +1,8 @@
-import 'package:app_froid/data/list_fluids.dart';
 import 'package:app_froid/data/list_ruler_mode.dart';
-import 'package:app_froid/data/models/fluid.dart';
 import 'package:app_froid/data/models/option_ruler.dart';
+import 'package:app_froid/features/ruler/domain/entities/fluid.dart';
+import 'package:app_froid/features/ruler/data/datasources/fluids_local_data.dart';
+import 'package:app_froid/features/fluid_custom/presentation/widgets/fluid_dropdown_selector.dart';
 import 'package:flutter/material.dart';
 
 class FormAdvancedRuler extends StatefulWidget {
@@ -28,7 +29,7 @@ class _FormAdvancedRuler extends State<FormAdvancedRuler> {
   final TextEditingController _val1Controller = TextEditingController();
   final TextEditingController _val2Controller = TextEditingController();
 
-  Fluid _selectedFluid = ListFluids.fluids.first;
+  Fluid _selectedFluid = FluidsLocalData.fluids.first;
   OptionRuler _need = ListOptionsRuler.options.first;
 
   OptionRuler _car1 = ListOptionsRuler.options.first;
@@ -148,19 +149,27 @@ class _FormAdvancedRuler extends State<FormAdvancedRuler> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  _buildDropdown<Fluid>(
-                    label: 'Fluide frigorigène',
-                    value: _selectedFluid,
-                    items: ListFluids.fluids,
-                    getLabel: (fluid) => fluid.name,
-                    onChanged: (Fluid? value) {
-                      if (value != null && ListFluids.existFluid(value)) {
-                        setState(() {
-                          _selectedFluid = value;
-                        });
-                      }
-                    },
-                    colorScheme: colorScheme,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Fluide frigorigène',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      StyledFluidDropdownSelector(
+                        value: _selectedFluid,
+                        onChanged: (Fluid value) {
+                          setState(() {
+                            _selectedFluid = value;
+                          });
+                        },
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   _buildDropdown<OptionRuler>(

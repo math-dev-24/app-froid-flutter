@@ -1,43 +1,30 @@
-import 'models/fluid.dart';
+// DEPRECATED: Utilisez FluidsLocalData à la place
+// Ce fichier est conservé pour compatibilité temporaire
+import 'package:app_froid/features/ruler/data/datasources/fluids_local_data.dart';
+import 'package:app_froid/features/ruler/domain/entities/fluid.dart';
+
+export 'package:app_froid/features/ruler/data/datasources/fluids_local_data.dart';
 
 /// Liste statique des fluides frigorigènes disponibles
+///
+/// DEPRECATED: Cette classe est obsolète.
+/// Utilisez FluidsLocalData à la place qui contient les 59 fluides complets.
 class ListFluids {
-  static const List<Fluid> fluids = [
-    Fluid(
-      name: 'R22',
-      refName: "R22",
-      pCrit: 49.9,
-      pTriple: -1,
-      tCrit: 96.15,
-      tTriple: -157.42
-    ),
-    Fluid(
-      name: 'R134a',
-      refName: 'R134a.fld',
-      pCrit: 40.59,
-      pTriple: -1,
-      tCrit: 101.06,
-      tTriple: -103.3
-      )
-  ];
+  /// DEPRECATED: Utilisez FluidsLocalData.fluids
+  static List<Fluid> get fluids => FluidsLocalData.fluids;
 
+  /// DEPRECATED: Utilisez FluidsLocalData.getFluidByRefName
   static Fluid? getFluidbyRefName(String refName) {
-    try {
-      return fluids.firstWhere((f) => f.refName == refName);
-    } catch (e) {
-      return null;
-    }
+    return FluidsLocalData.getFluidByRefName(refName);
   }
 
+  /// DEPRECATED: Utilisez FluidsLocalData.getFluidByName
   static Fluid? getFluidByName(String name) {
-    try {
-      return fluids.firstWhere((f) => f.name == name);
-    } catch(e) {
-      return null;
-    }
+    return FluidsLocalData.getFluidByName(name);
   }
 
+  /// DEPRECATED: Utilisez FluidsLocalData.existFluid
   static bool existFluid(Fluid fluid) {
-    return fluids.any((f) => f.refName == fluid.refName);
+    return FluidsLocalData.existFluid(fluid);
   }
 }

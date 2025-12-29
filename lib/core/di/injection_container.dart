@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/ruler/data/datasources/ruler_remote_datasource.dart';
 import '../../features/ruler/data/datasources/ruler_remote_datasource_impl.dart';
@@ -66,6 +67,11 @@ import '../../features/lfl_volume/domain/repositories/lfl_volume_repository.dart
 import '../../features/lfl_volume/domain/usecases/calculate_lfl_volume.dart';
 import '../../features/lfl_volume/domain/usecases/get_flammable_fluids.dart';
 import '../../features/lfl_volume/presentation/bloc/lfl_volume_bloc.dart';
+import '../../features/fluid_custom/data/datasources/fluid_custom_local_datasource.dart';
+import '../../features/fluid_custom/data/datasources/fluid_custom_local_datasource_impl.dart';
+import '../../features/fluid_custom/data/repositories/fluid_custom_repository_impl.dart';
+import '../../features/fluid_custom/domain/repositories/fluid_custom_repository.dart';
+import '../../features/fluid_custom/presentation/bloc/fluid_custom_bloc.dart';
 import '../network/network_info.dart';
 import '../network/network_info_impl.dart';
 
@@ -89,6 +95,10 @@ Future<void> initializeDependencies() async {
 
   // Connectivity
   getIt.registerLazySingleton<Connectivity>(() => Connectivity());
+
+  // SharedPreferences
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
 
   // ========================================
   // Core Dependencies
@@ -368,6 +378,31 @@ Future<void> initializeDependencies() async {
     () => LflVolumeBloc(
       getFlammableFluids: getIt(),
       calculateLflVolume: getIt(),
+    ),
+  );
+
+  // ========================================
+  // Feature: FluidCustom
+  // ========================================
+
+  // Data sources
+  getIt.registerLazySingleton<FluidCustomLocalDataSource>(
+    () => FluidCustomLocalDataSourceImpl(
+      sharedPreferences: getIt(),
+    ),
+  );
+
+  // Repository
+  getIt.registerLazySingleton<FluidCustomRepository>(
+    () => FluidCustomRepositoryImpl(
+      localDataSource: getIt(),
+    ),
+  );
+
+  // Bloc
+  getIt.registerFactory(
+    () => FluidCustomBloc(
+      repository: getIt(),
     ),
   );
 }

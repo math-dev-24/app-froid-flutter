@@ -24,17 +24,33 @@ class RulerRepositoryImpl implements RulerRepository {
   @override
   Future<Either<Failure, CalculationResult>> calculateSimple({
     required Fluid fluid,
-    required double temperature,
+    double? temperature,
+    double? pressure,
   }) async {
     return await _executeCalculation(() async {
-      return await remoteDataSource.calculate(
-        fluidRefName: fluid.refName,
-        car1: 'T',
-        val1: temperature,
-        car2: 'Q',
-        val2: 1.0,
-        carNeed: 'P',
-      );
+      if (temperature != null) {
+        // Mode T -> P
+        return await remoteDataSource.calculate(
+          fluidRefName: fluid.refName,
+          car1: 'T',
+          val1: temperature,
+          car2: 'Q',
+          val2: 1.0,
+          carNeed: 'P',
+        );
+      } else if (pressure != null) {
+        // Mode P -> T
+        return await remoteDataSource.calculate(
+          fluidRefName: fluid.refName,
+          car1: 'P',
+          val1: pressure,
+          car2: 'Q',
+          val2: 1.0,
+          carNeed: 'T',
+        );
+      } else {
+        throw ArgumentError('Either temperature or pressure must be provided');
+      }
     });
   }
 

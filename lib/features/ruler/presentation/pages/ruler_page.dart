@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection_container.dart';
+import '../../../fluid_custom/presentation/widgets/fluid_custom_button.dart';
 import '../../domain/entities/fluid.dart';
 import '../bloc/ruler_bloc.dart';
 import '../bloc/ruler_event.dart';
@@ -26,8 +27,15 @@ class RulerPage extends StatelessWidget {
 /// Vue de la page Ruler
 ///
 /// Séparée du BlocProvider pour faciliter les tests
-class RulerView extends StatelessWidget {
+class RulerView extends StatefulWidget {
   const RulerView({super.key});
+
+  @override
+  State<RulerView> createState() => _RulerViewState();
+}
+
+class _RulerViewState extends State<RulerView> {
+  RulerMode _currentMode = RulerMode.pressure;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +54,10 @@ class RulerView extends StatelessWidget {
             fontSize: 22,
           ),
         ),
+        actions: const [
+          FluidCustomButton(),
+          SizedBox(width: 8),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -65,14 +77,26 @@ class RulerView extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: FormRulerWidget(
-                    onSubmit: (Fluid fluid, double temperature) {
+                    onSubmit: (Fluid fluid, double value, RulerMode mode) {
+                      setState(() {
+                        _currentMode = mode;
+                      });
                       // Déclencher l'événement de calcul
-                      context.read<RulerBloc>().add(
-                            CalculateSimpleEvent(
-                              fluid: fluid,
-                              temperature: temperature,
-                            ),
-                          );
+                      if (mode == RulerMode.temperature) {
+                        context.read<RulerBloc>().add(
+                              CalculateSimpleEvent(
+                                fluid: fluid,
+                                temperature: value,
+                              ),
+                            );
+                      } else {
+                        context.read<RulerBloc>().add(
+                              CalculateSimpleEvent(
+                                fluid: fluid,
+                                pressure: value,
+                              ),
+                            );
+                      }
                     },
                   ),
                 ),
@@ -176,9 +200,15 @@ class RulerView extends StatelessWidget {
         ],
       );
     } else if (state is RulerLoaded) {
-      final pressure = state.result.getValue('result') ?? 0.0;
+      final resultValue = state.result.getValue('result') ?? 0.0;
+      // Inverser l'unité : si on a entré T, on affiche P et vice versa
+      final unit = _currentMode == RulerMode.temperature ? 'bar' : '°C';
+      final displayValue = _currentMode == RulerMode.temperature
+          ? resultValue.toStringAsFixed(2)  // Pression en bar
+          : resultValue.toStringAsFixed(1);  // Température en °C
+
       return Text(
-        '${pressure.toStringAsFixed(2)} bar',
+        '$displayValue $unit',
         style: TextStyle(
           fontSize: 36,
           fontWeight: FontWeight.bold,
@@ -187,8 +217,9 @@ class RulerView extends StatelessWidget {
       );
     } else {
       // État initial
+      final unit = _currentMode == RulerMode.temperature ? 'bar' : '°C';
       return Text(
-        '0.00 bar',
+        '0.0 $unit',
         style: TextStyle(
           fontSize: 36,
           fontWeight: FontWeight.bold,
