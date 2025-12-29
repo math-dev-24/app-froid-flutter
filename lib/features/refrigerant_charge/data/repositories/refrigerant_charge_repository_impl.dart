@@ -31,7 +31,7 @@ class RefrigerantChargeRepositoryImpl implements RefrigerantChargeRepository {
       final fluids = await localDataSource.getAvailableFluids();
       return Right(fluids);
     } catch (e) {
-      return Left(CacheFailure(e.toString()));
+      return Left(CalculationFailure(e.toString()));
     }
   }
 }
